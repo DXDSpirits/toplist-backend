@@ -10,3 +10,13 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
 )
+
+from django.conf import settings
+try:
+    if settings.LOCAL_SETTINGS:
+        from django.conf.urls.static import static
+        import mimetypes
+        urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+        mimetypes.add_type("image/png", ".png", True)
+except:
+    pass
