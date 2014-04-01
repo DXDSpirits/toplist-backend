@@ -1,5 +1,5 @@
 from django.db import models
-from fields import rename
+from fields import rename, fullpath
 
 class Topic(models.Model):
     def image_name(self, filename):
@@ -7,6 +7,8 @@ class Topic(models.Model):
     title = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     picture = models.ImageField(upload_to=image_name, blank=True, null=True)
+    def picture_fullpath(self):
+        return fullpath(self.picture)
 
 
 class Candidate(models.Model):
@@ -21,6 +23,8 @@ class Candidate(models.Model):
         return u'<img src="%s" width=200 height=200>' % (self.picture.url) if self.picture else None
     thumbnail.short_description = 'Thumbnail'
     thumbnail.allow_tags = True
+    def picture_fullpath(self):
+        return fullpath(self.picture)
     
     class Meta:
         ordering = ['topic', 'rank']
