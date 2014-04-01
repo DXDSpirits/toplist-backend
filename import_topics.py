@@ -16,10 +16,9 @@ def create_candidate(topic, title, rank):
 
 
 def create_topic(lines):
-    title = lines[0].strip()
-    description = lines[1].strip()
-    topic = Topic.objects.create(title=title, description=description)
-    candidates = [create_candidate(topic, title, rank + 1)
+    topic = Topic.objects.create(title=lines[0].strip(),
+                                 description=lines[1].strip())
+    candidates = [create_candidate(topic, title.strip(), rank + 1)
                   for rank, title in enumerate(lines[2:]) if title]
     Candidate.objects.bulk_create(candidates)
     return topic
