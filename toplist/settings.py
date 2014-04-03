@@ -39,6 +39,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     
     'rest_framework',
+    'corsheaders',
+    
     'topics'
 )
 
@@ -49,6 +51,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Allow CORS
+    'corsheaders.middleware.CorsMiddleware'
 )
 
 ROOT_URLCONF = 'toplist.urls'
@@ -115,6 +119,18 @@ REST_FRAMEWORK = {
     ),
     'PAGINATE_BY': 10
 }
+
+
+# CORS
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_HEADERS = (
+    'x-requested-with',
+    'content-type',
+    'accept',
+    'origin',
+    'authorization',
+    'cache-control'
+)
 
 
 # Local Settings
