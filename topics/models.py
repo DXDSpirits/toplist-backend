@@ -3,7 +3,10 @@ from fields import rename, fullpath
 
 class Topic(models.Model):
     def image_name(self, filename):
-        return 'topic/' + rename(filename)
+        if self.pk is None:
+            return 'topic/%s' % rename(filename)
+        else:
+            return 'topic/%d/%s' % (self.pk, rename(filename))
     title = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     picture = models.ImageField(upload_to=image_name, blank=True, null=True)
@@ -13,7 +16,10 @@ class Topic(models.Model):
 
 class Candidate(models.Model):
     def image_name(self, filename):
-        return 'topic/' + rename(filename)
+        if self.topic is None or self.topic.pk is None:
+            return 'topic/%s' % rename(filename)
+        else:
+            return 'topic/%d/%s' % (self.topic.pk, rename(filename))
     topic = models.ForeignKey(Topic, blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)

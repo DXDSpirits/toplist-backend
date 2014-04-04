@@ -11,14 +11,14 @@ from topics.models import Topic, Candidate
 
 
 def create_candidate(topic, title, rank):
-    return Candidate(topic=topic, title=title, rank=rank + 1,
+    return Candidate(topic=topic, title=title, rank=rank,
                      picture='topic/%d/%d.jpg' % (topic.id, rank))
 
 
 def create_topic(lines):
-    topic = Topic.objects.create(title=lines[0].strip(),
-                                 description=lines[1].strip())
-    candidates = [create_candidate(topic, title.strip(), rank + 1)
+    topic = Topic.objects.create(title=lines[0],
+                                 description=lines[1])
+    candidates = [create_candidate(topic, title, rank + 1)
                   for rank, title in enumerate(lines[2:]) if title]
     Candidate.objects.bulk_create(candidates)
     return topic
@@ -31,7 +31,7 @@ def list_files(topic_dir):
         if isfile(topic_file) and topic_file.endswith('.txt'):
             with codecs.open(topic_file, 'r', 'gbk') as f:
                 lines = f.readlines()
-    topic = create_topic(lines)
+    topic = create_topic([line.strip() for line in lines if line.strip()])
     # Copy pictures
     picture_dir = join(settings.MEDIA_ROOT, 'topic/%d' % topic.id)
     makedirs(picture_dir)
