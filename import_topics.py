@@ -25,7 +25,6 @@ def create_topic(lines):
 
 
 def list_files(topic_dir):
-    print topic_dir
     for name in listdir(topic_dir):
         topic_file = join(topic_dir, name)
         if isfile(topic_file) and topic_file.endswith('.txt'):
@@ -46,7 +45,11 @@ def list_dirs(root_dir):
     for name in listdir(root_dir):
         topic_dir = join(root_dir, name)
         if isdir(topic_dir):
-            list_files(topic_dir)
+            print topic_dir
+            try:
+                list_files(topic_dir)
+            except Exception as e:
+                print e
 
 
 if __name__ == "__main__":
