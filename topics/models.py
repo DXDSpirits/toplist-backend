@@ -65,3 +65,4 @@ class Vote(models.Model):
     candidate2 = models.ForeignKey(Candidate, null=True, blank=True, related_name='lose_set')
     draw = models.IntegerField(blank=True, null=True, default=0, choices=IS_DRAW)
     topic = models.ForeignKey(Topic, blank=True, null=True)
+    time_created = models.DateTimeField(db_column='time_created', auto_now_add=True)
