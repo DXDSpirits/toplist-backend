@@ -44,8 +44,23 @@ class Candidate(models.Model):
         return fullpath(self.picture)
 
     def score(self):
-        return self.win_set.filter(draw=0).count() * 3 + self.win_set.filter(draw=1).count() + self.lose_set.filter(
-            draw=1).count()
+        win_set = self.win_set
+        lose_set = self.lose_set
+
+        win_set_count = win_set.filter(draw=0).count()
+        lose_set_count = lose_set.filter(draw=0).count()
+        draw_set_count = win_set.filter(draw=1).count() + lose_set.filter(draw=1).count()
+        amount_count = win_set_count + lose_set_count + draw_set_count
+
+        numerator = win_set_count * 3.0 + draw_set_count
+
+        vote_count = self.topic.vote_set.count()
+        candidate_count = self.topic.candidate_set.count()
+        denominator = amount_count * 3.0 + (vote_count / (candidate_count * 2))
+        if denominator == 0:
+            return 0
+        else:
+            return numerator / denominator
 
     def vote_times(self):
         return self.win_set.count() + self.lose_set.count()
