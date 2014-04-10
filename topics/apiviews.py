@@ -36,10 +36,12 @@ class TopicViewSet(ReadOnlyModelViewSet):
                 'group by candidate1_id , candidate2_id' % int(pk)
         cursor.execute(query)
         desc = cursor.description
-        return Response([
+        result = [
             dict(zip([col[0] for col in desc], row))
             for row in cursor.fetchall()
-        ])
+        ]
+        cursor.close()
+        return Response(result)
 
 
 class CandidateViewSet(ReadOnlyModelViewSet):
