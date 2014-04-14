@@ -45,10 +45,15 @@ class TopicViewSet(ReadOnlyModelViewSet):
         cursor.close()
         return Response(result)
 
-    @action(methods=['post'])
+    @action(methods=['post', 'get'])
     def comment(self, request, pk=None):
-        comment = Comment.objects.create(content=request.POST['content'], topic=self.get_object())
-        return Response(CommentSerializer(comment, context={'request': request}).data)
+        print(request.method)
+        if request.method == 'POST':
+            comment = Comment.objects.create(content=request.POST['content'], topic=self.get_object())
+            return Response(CommentSerializer(comment, context={'request': request}).data)
+        else:
+            comments = Comment.objects.all().filter(topic=self.get_object())
+            return Response(CommentSerializer(comments, context={'request': request}).data)
 
 
 class CandidateViewSet(ReadOnlyModelViewSet):
