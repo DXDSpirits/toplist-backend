@@ -1,11 +1,13 @@
 from django.db import connection
-from rest_framework.decorators import link
+from rest_framework.decorators import link, action
 from rest_framework.generics import CreateAPIView
+from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from topics.models import Topic, Candidate
-from topics.serializers import TopicSerializer, CandidateSerializer, VoteSerializer
+from topics.models import Topic, Candidate, Comment
+from topics.serializers import TopicSerializer, CandidateSerializer, VoteSerializer, CommentSerializer
 from rest_framework.response import Response
 import random
+
 
 class TopicViewSet(ReadOnlyModelViewSet):
     queryset = Topic.objects.all()
@@ -43,11 +45,22 @@ class TopicViewSet(ReadOnlyModelViewSet):
         cursor.close()
         return Response(result)
 
+    @action(methods=['post'])
+    def comment(self, request, pk=None):
+        comment = Comment.objects.create(content=request.POST['content'], topic=self.get_object())
+        return Response(CommentSerializer(comment, context={'request': request}).data)
+
 
 class CandidateViewSet(ReadOnlyModelViewSet):
     queryset = Candidate.objects.all()
     serializer_class = CandidateSerializer
     paginate_by = 10
+
+    @action(methods=['post'])
+    def like(self, request, pk=None):
+        candidate = self.get_object()
+        candidate.like()
+        return Response(CandidateSerializer(candidate, context={'request': request}).data)
 
 
 class VoteCreation(CreateAPIView):

@@ -1,4 +1,4 @@
-from topics.models import Topic, Candidate, Vote
+from topics.models import Topic, Candidate, Vote, Comment
 from rest_framework import serializers
 from django.utils.translation import ugettext_lazy as _
 
@@ -48,4 +48,8 @@ class VoteSerializer(serializers.Serializer):
             raise serializers.ValidationError(_("Topic and candidate don't match."))
 
 
-
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('id', 'topic', 'content', 'time_created')
+        depth = 0

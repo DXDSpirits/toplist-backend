@@ -33,6 +33,7 @@ class Candidate(models.Model):
     description = models.TextField(blank=True, null=True)
     rank = models.IntegerField(blank=True, null=True)
     picture = models.ImageField(upload_to=image_name, blank=True, null=True)
+    likes = models.IntegerField(blank=True, default=0, null=True)
 
     def thumbnail(self):
         return u'<img src="%s" width=200 height=200>' % (self.picture.url) if self.picture else None
@@ -43,27 +44,34 @@ class Candidate(models.Model):
     def picture_fullpath(self):
         return fullpath(self.picture)
 
+    def like(self):
+        likes = self.likes
+        self.likes = likes + 1
+        self.save(update_fields=['likes'])
+        pass
+
     def score(self):
-        win_set = self.win_set
-        lose_set = self.lose_set
-
-        win_set_count = win_set.filter(draw=0).count()
-        lose_set_count = lose_set.filter(draw=0).count()
-        draw_set_count = win_set.filter(draw=1).count() + lose_set.filter(draw=1).count()
-        amount_count = win_set_count + lose_set_count + draw_set_count
-
-        numerator = win_set_count * 3.0 + draw_set_count
-
-        vote_count = self.topic.vote_set.count()
-        candidate_count = self.topic.candidate_set.count()
-        denominator = amount_count * 3.0 + (vote_count / (candidate_count * 2))
-        if denominator == 0:
-            return 0
-        else:
-            return numerator / denominator
+        return self.likes
+        # win_set = self.win_set
+        # lose_set = self.lose_set
+        #
+        # win_set_count = win_set.filter(draw=0).count()
+        # lose_set_count = lose_set.filter(draw=0).count()
+        # draw_set_count = win_set.filter(draw=1).count() + lose_set.filter(draw=1).count()
+        # amount_count = win_set_count + lose_set_count + draw_set_count
+        #
+        # numerator = win_set_count * 3.0 + draw_set_count
+        #
+        # vote_count = self.topic.vote_set.count()
+        # candidate_count = self.topic.candidate_set.count()
+        # denominator = amount_count * 3.0 + (vote_count / (candidate_count * 2))
+        # if denominator == 0:
+        #     return 0
+        # else:
+        #     return numerator / denominator
 
     def vote_times(self):
-        return self.win_set.count() + self.lose_set.count()
+        return 0
 
     class Meta:
         ordering = ['topic', 'rank']
@@ -80,4 +88,10 @@ class Vote(models.Model):
     candidate2 = models.ForeignKey(Candidate, null=True, blank=True, related_name='lose_set')
     draw = models.IntegerField(blank=True, null=True, default=0, choices=IS_DRAW)
     topic = models.ForeignKey(Topic, blank=True, null=True)
+    time_created = models.DateTimeField(db_column='time_created', auto_now_add=True)
+
+
+class Comment(models.Model):
+    topic = models.ForeignKey(Topic, blank=True, null=True)
+    content = models.TextField(default='', max_length=140, blank=True, null=True)
     time_created = models.DateTimeField(db_column='time_created', auto_now_add=True)

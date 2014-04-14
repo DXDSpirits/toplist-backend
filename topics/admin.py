@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db import models
 from django.forms import Textarea
-from topics.models import Topic, Candidate, Vote
+from topics.models import Topic, Candidate, Vote, Comment
 
 
 class CandidateInline(admin.TabularInline):
@@ -31,6 +31,10 @@ class CandidateAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'rank']
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['id', 'content', 'topic', 'time_created']
+
 admin.site.register(Topic, TopicAdmin)
 admin.site.register(Vote, VoteAdmin)
 admin.site.register(Candidate, CandidateAdmin)
+admin.site.register(Comment, CommentAdmin)
