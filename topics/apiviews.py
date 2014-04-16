@@ -1,4 +1,7 @@
+import json
 from django.db import connection
+from django.utils import simplejson
+from rest_framework import status
 from rest_framework.decorators import link, action
 from rest_framework.generics import CreateAPIView
 from rest_framework.status import HTTP_204_NO_CONTENT
@@ -47,13 +50,15 @@ class TopicViewSet(ReadOnlyModelViewSet):
 
     @action(methods=['post', 'get'])
     def comment(self, request, pk=None):
-        print(request.method)
         if request.method == 'POST':
-            comment = Comment.objects.create(content=request.POST['content'], topic=self.get_object())
-            return Response(CommentSerializer(comment, context={'request': request}).data)
+            request.DATA['topic'] = pk
+            serializer = CommentSerializer(data=request.DATA)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             comments = Comment.objects.all().filter(topic=self.get_object())
-            return Response(CommentSerializer(comments, context={'request': request}).data)
+            return Response(CommentSerializer(comments, context={'request': request}, many=True).data)
 
 
 class CandidateViewSet(ReadOnlyModelViewSet):
