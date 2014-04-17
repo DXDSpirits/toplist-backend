@@ -41,7 +41,8 @@ INSTALLED_APPS = (
     'rest_framework',
     'corsheaders',
     
-    'topics'
+    'topics',
+    'lovemessages'
 )
 
 MIDDLEWARE_CLASSES = (
