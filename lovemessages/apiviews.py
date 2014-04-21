@@ -6,7 +6,7 @@ from lovemessages.serializers import MessageSerializer
 class MessageViewSet(ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    paginate_by = 10
+    paginate_by = 100
     
     def get_queryset(self):
         queryset = self.queryset
