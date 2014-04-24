@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     
     url(r'^topics/', include('topics.urls')),
+    url(r'^lovemessages/', include('lovemessages.urls')),
 )
 
 from django.conf import settings

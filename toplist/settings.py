@@ -41,7 +41,8 @@ INSTALLED_APPS = (
     'rest_framework',
     'corsheaders',
     
-    'topics'
+    'topics',
+    'lovemessages'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -79,7 +80,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
