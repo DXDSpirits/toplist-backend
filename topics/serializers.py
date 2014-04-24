@@ -20,7 +20,7 @@ class TopicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Topic
-        fields = ('id', 'title', 'description', 'candidates')
+        fields = ('id', 'title', 'description', 'candidates', 'hidden')
         depth = 0
 
 

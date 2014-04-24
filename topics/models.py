@@ -4,6 +4,9 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Topic(models.Model):
+    IS_HIDDEN = ((0, _('No')),
+                 (1, _('Yes')))
+
     def image_name(self, filename):
         if self.pk is None:
             return 'topic/%s' % rename(filename)
@@ -13,6 +16,7 @@ class Topic(models.Model):
     title = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     picture = models.ImageField(upload_to=image_name, blank=True, null=True)
+    hidden = models.IntegerField(blank=True, null=True, default=0, choices=IS_HIDDEN)
 
     def picture_fullpath(self):
         return fullpath(self.picture)

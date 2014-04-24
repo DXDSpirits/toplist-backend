@@ -57,6 +57,7 @@ class TopicViewSet(ReadOnlyModelViewSet):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
+            # page = int(request.QUERY_PARAMS.get('page')
             comments = Comment.objects.all().filter(topic=self.get_object()).order_by('-id')[:100]
             return Response(CommentSerializer(comments, context={'request': request}, many=True).data)
 
