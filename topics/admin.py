@@ -19,7 +19,9 @@ class TopicAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 50})},
     }
-    list_display = ['title', 'description']
+    list_display = ['id', 'title', 'description', 'hidden']
+    list_display_links = ['id', 'title']
+    list_editable = ['hidden']
     inlines = [CandidateInline]
 
 
