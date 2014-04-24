@@ -13,7 +13,7 @@ import random
 
 
 class TopicViewSet(ReadOnlyModelViewSet):
-    queryset = Topic.objects.all()
+    queryset = Topic.objects.all().filter(hidden=0)
     serializer_class = TopicSerializer
     paginate_by = 10
 
